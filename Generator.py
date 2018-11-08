@@ -1,6 +1,9 @@
+#!/usr/bin/env python
 import random
 import string
 from typing import TextIO
+
+backup_file = open('backup.txt', 'w')
 
 storage = {}
 
@@ -11,21 +14,21 @@ def creation(usage:str,length:int) -> str:
         print('Password usage already exists!')
         return
     while len(password) < length:
-        password += random.choice(string.ascii_letters + string.digits)
+        password += random.choice(string.ascii_letters + string.digits + string.punctuation)
     storage[usage] = password
     return password
 
 
-backup_file = open('backup.txt', 'w')
-
-
-def backup(key: str) -> None:
+def backup(key: str, storage:dict, file:TextIO) -> None:
     for keys in storage:
         if keys == key:
-            backup_file.write(key + ':' + storage[key] + '/n')
-            backup_file.close()
+            file.write(key + ':' + storage[key])
 
 
 def clear(file: TextIO) -> None:
     if input('Are you sure you want to clear the backup? -Y/N') == 'Y':
         open(file, 'w').close()
+
+
+def retrieve(storage: dict, key) -> str:
+    return storage[str(key)]
