@@ -1,5 +1,4 @@
 # Vault
 
-Python Password Manager
+An offline, commandline based Python Password Manager
 
-An offline password manager.
