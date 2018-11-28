@@ -8,5 +8,7 @@ A basic Python based password manager that uses a CLI interface.
 
 # Usage
 
-![Usage](/img/creation.gif)
+![Usage](/img/creation.gif) 
+
+![Retrieval](/img/retrieval.gif)
 
