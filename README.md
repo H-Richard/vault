@@ -1,4 +1,3 @@
 # Vault
 
-An offline, commandline based Python Password Manager
-
+A basic Python based password manager that uses a CMI interface
