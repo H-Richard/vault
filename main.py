@@ -35,9 +35,11 @@ def main():
         while not action:
             print("Your masterkey was empty!\n")
             action = input(mkeyprompt)
-        mycursor.execute("")
+        mycursor.execute("INSERT INTO passwords VALUES(%s, %s, %s)", ("SYSTEM", "MASTER", action))
+        master = True;
 
 
+    key = input("Please enter your masterkey")
 
     action = ''
 
