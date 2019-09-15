@@ -1,49 +1,35 @@
 import os
 import Generator
+import mysql.connector
 
-action_prompt = ['C - Create a password, R - Retrieve a password']
+action_prompt = "[C - Create a password, R - Retrieve a password]\n"
 
 
 def main():
 
-    action = ''
-
-    pws = {}
-    usrs = {}
-
-    b_txt = 'backup.txt'
-
-    b_lines = open(b_txt).readlines()
-
     master = False
 
-    if os.stat(b_txt).st_size == 0:
-        master_key = input('Please enter a masterkey')
-        master_confirm = input('Please enter your masterkey again')
-        if master_key == master_confirm:
-            writable = open(b_txt, 'w')
-            writable.write(master_key)
+    db = mysql.connector.connect(
+          host="localhost",
+          user="root",
+          passwd="password"
+        )
 
-    elif os.stat(b_txt).st_size != 0:
-        if '\n' not in b_lines[0]:
-            master_key = b_lines[0]
-        elif '\n' in b_lines[0]:
-            master_key = b_lines[0][:b_lines[0].find('\n')]
+    mycursor = db.cursor();
 
-        while not master:
-            prompt = input('Please enter your masterkey')
-            if prompt == master_key:
-                master = True
-            else:
-                print('Error!')
+
+    mycursor.execute("SHOW DATABASES")
+
+    for x in mycursor:
+        if 'main' in x:
+            break;
+    else:
+        mycursor.execute("CREATE DATABASE main")
+        mycursor.execute("CREATE TABLE ")
+
+    action = ''
 
     if master:
-        for i in range(1, len(b_lines)):
-            temp = (b_lines[i].split('-'))
-            usr_pws = temp[1].split(':')
-            pws[temp[0].lower()] = usr_pws[1]
-            usrs[temp[0].lower()] = usr_pws[0]
-
         while action == '':
             action = input(action_prompt)
 
