@@ -27,5 +27,13 @@ def check_password(password: str) -> bool:
 def generator(length: int) -> str:
     password = gen(length)
     while not check_password(password):
-        password = gen(password)
+        password = gen(length)
     return password
+
+
+def main():
+    password = generator(8)
+    print(password)
+
+if __name__ == "__main__":
+    main()
