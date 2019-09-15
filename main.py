@@ -9,23 +9,35 @@ def main():
 
     master = False
 
+
     db = mysql.connector.connect(
           host="localhost",
           user="root",
-          passwd="password"
+          passwd="password",
+          database="main"
         )
 
     mycursor = db.cursor();
-
-
+    mycursor.execute("DROP DATABASE main")
     mycursor.execute("SHOW DATABASES")
 
     for x in mycursor:
         if 'main' in x:
+            master = True;
             break;
     else:
         mycursor.execute("CREATE DATABASE main")
-        mycursor.execute("CREATE TABLE ")
+        mycursor.execute("USE main")
+        mycursor.execute("CREATE TABLE passwords (website VARCHAR(255), \
+        username_email VARCHAR(255), password VARCHAR(255), PRIMARY KEY(website, username_email))")
+        mkeyprompt = "Please choose a non-empty masterkey:\n"
+        action = input(mkeyprompt)
+        while not action:
+            print("Your masterkey was empty!\n")
+            action = input(mkeyprompt)
+        mycursor.execute("")
+
+
 
     action = ''
 
