@@ -39,7 +39,11 @@ def main():
         master = True;
 
 
-    key = input("Please enter your masterkey")
+    #key = input("Please enter your masterkey")
+
+    #if key == 
+    print(mycursor.execute("SELECT password FROM passwords WHERE website = %s AND \
+                               username_email = %s", ("SYSTEM", "MASTER")))
 
     action = ''
 
