@@ -1,6 +1,7 @@
 import os
 import Generator
 import mysql.connector
+import getpass
 
 action_prompt = "[C - Create a password, R - Retrieve a password]\n"
 
@@ -13,8 +14,7 @@ def main():
     db = mysql.connector.connect(
           host="localhost",
           user="root",
-          passwd="password",
-          database="main"
+          passwd="password"
         )
 
     mycursor = db.cursor();
@@ -22,7 +22,7 @@ def main():
     mycursor.execute("SHOW DATABASES")
 
     for x in mycursor:
-        if 'main' in x:
+        if 'main' == x[0]:
             master = True;
             break;
     else:
@@ -30,20 +30,34 @@ def main():
         mycursor.execute("USE main")
         mycursor.execute("CREATE TABLE passwords (website VARCHAR(255), \
         username_email VARCHAR(255), password VARCHAR(255), PRIMARY KEY(website, username_email))")
-        mkeyprompt = "Please choose a non-empty masterkey:\n"
-        action = input(mkeyprompt)
-        while not action:
-            print("Your masterkey was empty!\n")
-            action = input(mkeyprompt)
-        mycursor.execute("INSERT INTO passwords VALUES(%s, %s, %s)", ("SYSTEM", "MASTER", action))
+
+        mkey = getpass.getpass(prompt = "Please choose a non-empty masterkey:\n")
+        while not mkey:
+            print("Your masterkey was empty!")
+            mkey = getpass.getpass(prompt = "Please choose a non-empty masterkey:\n")
+        mkey2 = getpass.getpass(prompt = "Please re-enter your masterkey:\n")
+        while mkey2 != mkey:
+            print("Your masterkeys did not match!")
+            mkey = getpass.getpass(prompt = "Please choose a non-empty masterkey:\n")
+            while not mkey:
+                print("Your masterkey was empty!\n")
+                mkey = getpass.getpass(prompt = mkeyprompt)
+            mkey2 = getpass.getpass(prompt = "Please re-enter your masterkey:\n")
+
+        mycursor.execute("INSERT INTO passwords VALUES(%s, %s, %s)", ("SYSTEM", "MASTER", mkey))
         master = True;
 
 
-    #key = input("Please enter your masterkey")
+    key = getpass.getpass(prompt = "Please enter your masterkey:\n")
 
-    #if key == 
-    print(mycursor.execute("SELECT password FROM passwords WHERE website = %s AND \
-                               username_email = %s", ("SYSTEM", "MASTER")))
+    mycursor.execute("SELECT password FROM passwords WHERE website = %s AND \
+                               username_email = %s", ("SYSTEM", "MASTER"))
+    myresult = mycursor.fetchone()
+
+    while key != myresult[0]:
+        key = getpass.getpass(prompt = "Your masterkey was wrong! Please re-enter your master key:\n")
+
+    print("EYYYY IT WORKED")
 
     action = ''
 
