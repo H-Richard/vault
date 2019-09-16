@@ -5,12 +5,37 @@ import getpass
 
 action_prompt = "[C - Create a password, R - Retrieve a password]\n"
 
+def mkeysetup() -> str:
+    mkeyprompt = "Please choose a non-empty masterkey:\n"
+    mkey2prompt = "Please re-enter your masterkey:\n"
+    mkey = getpass.getpass(prompt = mkeyprompt)
+    while not mkey:
+        print("Your masterkey was empty!")
+        mkey = getpass.getpass(prompt = mkeyprompt)
+
+    mkey2 = getpass.getpass(prompt = mkey2prompt)
+    while mkey2 != mkey:
+        print("Your masterkeys did not match!")
+        mkey2 = getpass.getpass(prompt = mkey2prompt)
+    print("Setup complete, enter you masterkey 1 more time to begin!")
+    return mkey
+
+
+def ascii():
+    print("WELCOME TO ")
+    print("  __   __   ______     __  __     __         ______ ");
+    print(" /\ \ / /  /\  __ \   /\ \/\ \   /\ \       /\__  _\ ")
+    print(" \ \ \ /   \ \  __ \  \ \ \_\ \  \ \ \____  \/_/\ \/ ")
+    print("  \ \__|    \ \_\ \_\  \ \_____\  \ \_____\    \ \_\ ")
+    print("   \/_/      \/_/\/_/   \/_____/   \/_____/     \/_/ ")
+    print("\n")
 
 def main():
 
     master = False
 
-
+    ascii()
+    
     db = mysql.connector.connect(
           host="localhost",
           user="root",
@@ -31,18 +56,7 @@ def main():
         mycursor.execute("CREATE TABLE passwords (website VARCHAR(255), \
         username_email VARCHAR(255), password VARCHAR(255), PRIMARY KEY(website, username_email))")
 
-        mkey = getpass.getpass(prompt = "Please choose a non-empty masterkey:\n")
-        while not mkey:
-            print("Your masterkey was empty!")
-            mkey = getpass.getpass(prompt = "Please choose a non-empty masterkey:\n")
-        mkey2 = getpass.getpass(prompt = "Please re-enter your masterkey:\n")
-        while mkey2 != mkey:
-            print("Your masterkeys did not match!")
-            mkey = getpass.getpass(prompt = "Please choose a non-empty masterkey:\n")
-            while not mkey:
-                print("Your masterkey was empty!\n")
-                mkey = getpass.getpass(prompt = mkeyprompt)
-            mkey2 = getpass.getpass(prompt = "Please re-enter your masterkey:\n")
+        mkey = mkeysetup()
 
         mycursor.execute("INSERT INTO passwords VALUES(%s, %s, %s)", ("SYSTEM", "MASTER", mkey))
         master = True;
