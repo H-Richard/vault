@@ -3,7 +3,7 @@ import Generator
 import mysql.connector
 import getpass
 
-action_prompt = "[C - Create a password, R - Retrieve a password]\n"
+action_prompt = "[C - Create a password, R - Retrieve a password, E - Exit the Program, S - Show All]\n"
 
 def mkeysetup() -> str:
     mkeyprompt = "Please choose a non-empty masterkey:\n"
@@ -35,7 +35,7 @@ def main():
     master = False
 
     ascii()
-    
+
     db = mysql.connector.connect(
           host="localhost",
           user="root",
@@ -71,17 +71,22 @@ def main():
     while key != myresult[0]:
         key = getpass.getpass(prompt = "Your masterkey was wrong! Please re-enter your master key:\n")
 
-    print("EYYYY IT WORKED")
-
     action = ''
 
     if master:
         while action == '':
             action = input(action_prompt)
-
             if action.lower() == 'c':
-                username = input('Please enter a username')
-                usage = input('Please enter a usage/website')
+                username = input('Please enter your username/email')
+                usage = input('Please enter the website/usage')
+                mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
+                count = mycursor.rowcount
+                print(count)
+                print("working here")
+                print(record)
+                if record == "":
+                    print("nothing found!")
+                break
                 if usage in pws or usage in usrs:
                     print('You already have a login for this website!')
                     break
