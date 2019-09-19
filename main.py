@@ -18,8 +18,8 @@ def main():
     master = False
 
     if os.stat(b_txt).st_size == 0:
-        master_key = input('Please enter a masterkey')
-        master_confirm = input('Please enter your masterkey again')
+        master_key = input('Please enter a masterkey ')
+        master_confirm = input('Please enter your masterkey again ')
         if master_key == master_confirm:
             writable = open(b_txt, 'w')
             writable.write(master_key)
@@ -31,7 +31,7 @@ def main():
             master_key = b_lines[0][:b_lines[0].find('\n')]
 
         while not master:
-            prompt = input('Please enter your masterkey')
+            prompt = input('Please enter your masterkey ')
             if prompt == master_key:
                 master = True
             else:
@@ -48,12 +48,12 @@ def main():
             action = input(action_prompt)
 
             if action.lower() == 'c':
-                username = input('Please enter a username')
-                usage = input('Please enter a usage/website')
+                username = input('Please enter a username ')
+                usage = input('Please enter a usage/website ')
                 if usage in pws or usage in usrs:
                     print('You already have a login for this website!')
                     break
-                length = input('Please enter a length')
+                length = input('Please enter a length ')
                 password = Generator.gen(int(length))
                 print('this is your password:')
                 print(password)
