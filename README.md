@@ -5,10 +5,3 @@ A basic Python based password manager that uses a CLI interface.
 # Setup
 
 ![](/img/setup.gif)
-
-# Usage
-
-![Usage](/img/creation.gif) 
-
-![Retrieval](/img/retrieval.gif)
-
