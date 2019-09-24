@@ -6,10 +6,12 @@ import json
 
 
 
-action_prompt = """C - Create a password
+action_prompt = """ACTIONS:
+C - Create a password
 R - Retrieve a password
 E - Exit the Program
-show - Query data [show username_email, show website]\n"""
+D - Delete an entry (USE WITH CAUTION!)
+Q - Query data [Usage: Q username_email, Q website...]\n"""
 
 def mkeysetup() -> str:
     mkeyprompt = "Please choose a non-empty masterkey:\n"
@@ -35,7 +37,6 @@ def ascii():
     print("  \ \/ / _` | | | | | __| ")
     print("   \  / (_| | |_| | | |_  ")
     print("    \/ \__,_|\__,_|_|\__| Python and MySQL Powered Password Manager v1.1")
-    print("\n")
 
 
 def main():
@@ -89,8 +90,8 @@ def main():
         while action == '':
             action = input(action_prompt)
             if action.lower() == 'c':
-                username = input('Please enter your username/email')
-                usage = input('Please enter the website/usage')
+                username = input('Please enter your username/email:\n')
+                usage = input('Please enter the website/usage:\n')
                 mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
                 count = mycursor.rowcount
                 print(count)
