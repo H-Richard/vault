@@ -23,11 +23,12 @@ def mkeysetup() -> str:
 
 def ascii():
     print("WELCOME TO ")
-    print("  __   __   ______     __  __     __         ______ ");
-    print(" /\ \ / /  /\  __ \   /\ \/\ \   /\ \       /\__  _\ ")
-    print(" \ \ \ /   \ \  __ \  \ \ \_\ \  \ \ \____  \/_/\ \/ ")
-    print("  \ \__|    \ \_\ \_\  \ \_____\  \ \_____\    \ \_\ ")
-    print("   \/_/      \/_/\/_/   \/_____/   \/_____/     \/_/ ")
+    print("__      __         _ _    ")
+    print("\ \    / /        | | |   ")
+    print(" \ \  / /_ _ _   _| | |_  ")
+    print("  \ \/ / _` | | | | | __| ")
+    print("   \  / (_| | |_| | | |_  ")
+    print("    \/ \__,_|\__,_|_|\__| Python and MySQL Powered Password Manager v1.1")
     print("\n")
 
 def main():
