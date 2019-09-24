@@ -2,8 +2,14 @@ import os
 import Generator
 import mysql.connector
 import getpass
+import json
 
-action_prompt = "[C - Create a password, R - Retrieve a password, E - Exit the Program, S - Show All]\n"
+
+
+action_prompt = """C - Create a password
+R - Retrieve a password
+E - Exit the Program
+show - Query data [show username_email, show website]\n"""
 
 def mkeysetup() -> str:
     mkeyprompt = "Please choose a non-empty masterkey:\n"
@@ -31,16 +37,21 @@ def ascii():
     print("    \/ \__,_|\__,_|_|\__| Python and MySQL Powered Password Manager v1.1")
     print("\n")
 
+
 def main():
 
     master = False
 
     ascii()
 
+    with open('config.json') as json_file:
+        data = json.load(json_file)
+    print()
+
     db = mysql.connector.connect(
-          host="localhost",
-          user="root",
-          passwd="password"
+          host=data["host"],
+          user=data["user"],
+          passwd=data["passwd"]
         )
 
     mycursor = db.cursor();
