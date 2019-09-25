@@ -72,7 +72,10 @@ def main():
         mkey = mkeysetup()
 
         mycursor.execute("INSERT INTO passwords VALUES(%s, %s, %s)", ("SYSTEM", "MASTER", mkey))
+        db.commit()
         master = True;
+
+        mycursor.close()
 
 
     key = getpass.getpass(prompt = "Please enter your masterkey:\n")
@@ -94,23 +97,13 @@ def main():
                 usage = input('Please enter the website/usage:\n')
                 mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
                 count = mycursor.rowcount
-                print(count)
-                print("working here")
-                print(record)
-                if record == "":
-                    print("nothing found!")
+                if count == 0:
+                    length = int(input("Length of password:\n"))
+                    password = Generator.gen(length)
+                    mycursor.execute("INSERT INTO passwords (website, username_email, password) VALUES (%s, %s, %s)", (usage, username, password))
+                else:
+                    print("username+usage already in database")
                 break
-                if usage in pws or usage in usrs:
-                    print('You already have a login for this website!')
-                    break
-                length = input('Please enter a length ')
-                password = Generator.gen(int(length))
-                print('this is your password:')
-                print(password)
-                appendable = open(b_txt, 'a')
-                append = '\n' + usage + '-' + username + ':' + password
-                appendable.write(append)
-                action = ''
             if action.lower() == 'r':
                 usage = input('What is the usage/website?')
                 username = 'username' + ':' + usrs[usage]
