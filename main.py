@@ -75,8 +75,6 @@ def main():
         db.commit()
         master = True;
 
-        mycursor.close()
-
 
     key = getpass.getpass(prompt = "Please enter your masterkey:\n")
 
@@ -92,6 +90,9 @@ def main():
     if master:
         while action == '':
             action = input(action_prompt)
+            if action.lower() == 'e':
+                master = False;
+                break;
             if action.lower() == 'c':
                 username = input('Please enter your username/email:\n')
                 usage = input('Please enter the website/usage:\n')
@@ -111,7 +112,8 @@ def main():
                 print(username)
                 print(password)
                 action = ''
-
+    db.commit()
+    mycursor.close()
 
 if __name__ == "__main__":
     main()
