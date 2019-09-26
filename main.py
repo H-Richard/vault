@@ -55,7 +55,8 @@ def main():
           passwd=data["passwd"]
         )
 
-    mycursor = db.cursor();
+
+    mycursor = db.cursor(buffered=True);
     mycursor.execute("DROP DATABASE main")
     mycursor.execute("SHOW DATABASES")
 
@@ -90,9 +91,11 @@ def main():
     if master:
         while action == '':
             action = input(action_prompt)
+
             if action.lower() == 'e':
                 master = False;
                 break;
+
             if action.lower() == 'c':
                 username = input('Please enter your username/email:\n')
                 usage = input('Please enter the website/usage:\n')
@@ -102,15 +105,25 @@ def main():
                     length = int(input("Length of password:\n"))
                     password = Generator.gen(length)
                     mycursor.execute("INSERT INTO passwords (website, username_email, password) VALUES (%s, %s, %s)", (usage, username, password))
+                    db.commit()
                 else:
                     print("username+usage already in database")
-                break
+                action = ''
+
             if action.lower() == 'r':
-                usage = input('What is the usage/website?')
-                username = 'username' + ':' + usrs[usage]
-                password = 'password' + ':' + pws[usage]
-                print(username)
-                print(password)
+                    
+                usage = input('What is the usage/website?\n')
+                username = input('What is the username/email?\n')
+                mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
+                count = mycursor.rowcount
+                if count == 1:
+                    mycursor.execute("SELECT password FROM passwords WHERE website = %s AND \
+                                username_email = %s", (usage, username))
+                    password = mycursor.fetchone()
+                    password = password[0]
+                    print('Your password: ' + password)
+                else:
+                    print('There is no such website/username combination in the database\n')
                 action = ''
     db.commit()
     mycursor.close()
