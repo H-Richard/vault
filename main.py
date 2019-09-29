@@ -38,6 +38,45 @@ def ascii():
     print("   \  / (_| | |_| | | |_  ")
     print("    \/ \__,_|\__,_|_|\__| Python and MySQL Powered Password Manager v1.1")
 
+def creatpswd(mycursor):
+    username = input('Please enter your username/email:\n')
+    usage = input('Please enter the website/usage:\n')
+    mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
+    count = mycursor.rowcount
+    if count == 0:
+        length = int(input("Length of password:\n"))
+        password = Generator.gen(length)
+        mycursor.execute("INSERT INTO passwords (website, username_email, password) VALUES (%s, %s, %s)", (usage, username, password))
+    else:
+        print("username+usage already in database")
+
+def retreivepswd(mycursor):
+    usage = input('What is the usage/website?\n')
+    username = input('What is the username/email?\n')
+    mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
+    count = mycursor.rowcount
+    if count == 1:
+        mycursor.execute("SELECT password FROM passwords WHERE website = %s AND \
+                             username_email = %s", (usage, username))
+        password = mycursor.fetchone()
+        password = password[0]
+        print('Your password: ' + password)
+    else:
+        print('There is no such website/username combination in the database\n')
+
+def deletepswd(mycursor):
+    usage = input('What is the usage/website password would you like to delete?\n')
+    username = input('What is the username/email?\n')
+    mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
+    count = mycursor.rowcount
+    if count == 1:
+        answer = input('Are you sure you want to delete this? Y/N\n')
+        if answer.lower()!='y' and answer.lower()!='n':
+            answer = input('Please enter Y or N\n')
+        if answer.lower()=='y':
+            mycursor.execute("DELETE FROM passwords WHERE website=%s AND username_email=%s", (usage, username))
+        else:
+            print('There is no such website/username combination in the database\n')
 
 def main():
 
@@ -57,11 +96,11 @@ def main():
 
 
     mycursor = db.cursor(buffered=True);
-    mycursor.execute("DROP DATABASE main")
     mycursor.execute("SHOW DATABASES")
 
     for x in mycursor:
         if 'main' == x[0]:
+            mycursor.execute("USE main")
             master = True;
             break;
     else:
@@ -97,34 +136,18 @@ def main():
                 break;
 
             if action.lower() == 'c':
-                username = input('Please enter your username/email:\n')
-                usage = input('Please enter the website/usage:\n')
-                mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
-                count = mycursor.rowcount
-                if count == 0:
-                    length = int(input("Length of password:\n"))
-                    password = Generator.gen(length)
-                    mycursor.execute("INSERT INTO passwords (website, username_email, password) VALUES (%s, %s, %s)", (usage, username, password))
-                    db.commit()
-                else:
-                    print("username+usage already in database")
+                creatpswd(mycursor)
                 action = ''
 
             if action.lower() == 'r':
-                    
-                usage = input('What is the usage/website?\n')
-                username = input('What is the username/email?\n')
-                mycursor.execute("SELECT * FROM passwords WHERE username_email = %s AND website = %s", (username, usage))
-                count = mycursor.rowcount
-                if count == 1:
-                    mycursor.execute("SELECT password FROM passwords WHERE website = %s AND \
-                                username_email = %s", (usage, username))
-                    password = mycursor.fetchone()
-                    password = password[0]
-                    print('Your password: ' + password)
-                else:
-                    print('There is no such website/username combination in the database\n')
+                retreivepswd(mycursor)
                 action = ''
+
+            if action.lower() == 'd':
+                deletepswd(mycursor)
+                action = ''
+        db.commit()               
+        
     db.commit()
     mycursor.close()
 
