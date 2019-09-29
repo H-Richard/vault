@@ -75,8 +75,8 @@ def deletepswd(mycursor):
             answer = input('Please enter Y or N\n')
         if answer.lower()=='y':
             mycursor.execute("DELETE FROM passwords WHERE website=%s AND username_email=%s", (usage, username))
-        else:
-            print('There is no such website/username combination in the database\n')
+    else:
+        print('There is no such website/username combination in the database\n')
 
 def main():
 
