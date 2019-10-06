@@ -20,7 +20,7 @@ def main():
 
     master = False
 
-    ASCIIascii()
+    ASCII.ascii()
 
     with open('config.json') as json_file:
         data = json.load(json_file)

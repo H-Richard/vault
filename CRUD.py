@@ -1,12 +1,13 @@
 import Generator
 import mysql.connector
 import getpass
+import pyperclip
 
 mkeyprompt = "Please choose a non-empty masterkey:\n"
 mkey2prompt = "Please re-enter your masterkey:\n"
 
 def mkeysetup() -> str:
-    
+
     mkey = getpass.getpass(prompt = mkeyprompt)
     while not mkey:
         print("Your masterkey was empty!")
@@ -27,6 +28,8 @@ def creatpswd(mycursor):
     if count == 0:
         length = int(input("Length of password:\n"))
         password = Generator.gen(length)
+        pyperclip.copy(password)
+        print("Password has been copied to the clipboard!~\n")
         mycursor.execute("INSERT INTO passwords (website, username_email, password) VALUES (%s, %s, %s)", (usage, username, password))
     else:
         print("username+usage already in database")
@@ -41,7 +44,8 @@ def retreivepswd(mycursor):
                              username_email = %s", (usage, username))
         password = mycursor.fetchone()
         password = password[0]
-        print('Your password: ' + password)
+        print('Your password: ' + password + " has been copied to the clipboard!~\n")
+        pyperclip.copy(password)
     else:
         print('There is no such website/username combination in the database\n')
 
