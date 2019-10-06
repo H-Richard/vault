@@ -146,8 +146,8 @@ def main():
             if action.lower() == 'd':
                 deletepswd(mycursor)
                 action = ''
-        db.commit()               
-        
+        db.commit()
+
     db.commit()
     mycursor.close()
 
