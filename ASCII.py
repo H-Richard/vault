@@ -5,5 +5,4 @@ def ascii():
     print(" \ \  / /_ _ _   _| | |_  ")
     print("  \ \/ / _` | | | | | __| ")
     print("   \  / (_| | |_| | | |_  ")
-    print("    \/ \__,_|\__,_|_|\__| Python and MySQL Powered Password Manager v1.1")
-    print("\n")
+    print("    \/ \__,_|\__,_|_|\__| Python and MySQL Powered Password Manager v2.1")
